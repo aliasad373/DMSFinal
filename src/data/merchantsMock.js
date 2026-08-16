@@ -1,0 +1,58 @@
+export const initialMerchants = [
+  {
+    id: 1,
+    mid: "MID100001",
+    tid: "TID200001",
+    status: "Active",
+    createdAt: "2026-08-01T10:30:00",
+  },
+  {
+    id: 2,
+    mid: "MID100002",
+    tid: "TID200002",
+    status: "Active",
+    createdAt: "2026-08-01T11:15:00",
+  },
+  {
+    id: 3,
+    mid: "MID100003",
+    tid: "TID200003",
+    status: "Active",
+    createdAt: "2026-08-02T09:45:00",
+  },
+  {
+    id: 4,
+    mid: "MID100004",
+    tid: "TID200004",
+    status: "Inactive",
+    createdAt: "2026-08-02T13:20:00",
+  },
+  {
+    id: 5,
+    mid: "MID100005",
+    tid: "TID200005",
+    status: "Active",
+    createdAt: "2026-08-03T10:00:00",
+  },
+  {
+    id: 6,
+    mid: "MID100006",
+    tid: "TID200006",
+    status: "Active",
+    createdAt: "2026-08-03T14:40:00",
+  },
+  {
+    id: 7,
+    mid: "MID100007",
+    tid: "TID200007",
+    status: "Inactive",
+    createdAt: "2026-08-04T11:05:00",
+  },
+  {
+    id: 8,
+    mid: "MID100008",
+    tid: "TID200008",
+    status: "Active",
+    createdAt: "2026-08-04T15:30:00",
+  },
+];

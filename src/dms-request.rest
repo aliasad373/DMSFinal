@@ -1,0 +1,135 @@
+
+### Variables
+@baseUrl = http://localhost:3001/api
+
+
+
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJkbXNhZG1pbiIsInVzZXJfdHlwZSI6ImFkbWluIiwicm9sZXMiOltbImFsbCJdXSwiaWF0IjoxNzg2MDMxMDQ5LCJleHAiOjE3ODYwNTk4NDl9.8DyS209teZW5JYLM74u4yG215XSrEPuuX7RsLeOk2cw
+
+
+
+### dms admin login
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+ "username": "dmsadmin",
+  "password": "admin123"
+ 
+}
+### register bank
+POST {{baseUrl}}/banks/register
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "bankName": "NEW BANK LIMITED"
+}
+
+
+### fetch all banks list (cards not included)
+GET {{baseUrl}}/banks/allbanks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+### cards registration with no card name
+POST {{baseUrl}}/cards/register
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "bankId": 30,
+  "cardName": null,
+  "cardType": "CREDIT",
+  "cardCategory": "GOLD",
+  "discountPercentage": 15,
+  "discountedAmount": 2500
+}
+
+###cards registration with card name
+POST {{baseUrl}}/cards/register
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "bankId": 33,
+  "cardName": "Visa Gold",
+  "cardType": "CREDIT",
+  "cardCategory": "GOLD",
+  "discountPercentage": 15,
+  "discountedAmount": 2500
+}
+
+
+### all cards list 
+GET {{baseUrl}}/cards/allcards
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+
+### details of single bank (cards list included)
+GET {{baseUrl}}/banks/bank-cards/33
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+### fetch all banks list (cards included)
+GET {{baseUrl}}/banks/all-banks-with-cards
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+### delete card
+DELETE {{baseUrl}}/cards/delete-card/3
+Authorization: Bearer {{token}}
+
+### update card
+PUT {{baseUrl}}/cards/update-card/2
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "bankId": 30,
+  "cardName": "Visa Platinum",
+  "cardType": "CREDIT",
+  "cardCategory": "PLATINUM",
+  "discountPercentage": 20,
+  "discountedAmount": 5000
+}
+
+
+### merchan registration
+POST {{baseUrl}}/merchants/register
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "MID": "267272424702001",
+  "TID": "27022901"
+}
+
+### udapte merchant
+PUT {{baseUrl}}/merchants/update-merchant/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "MID": "267272424722001",
+  "TID": "27722001"
+}
+
+### all mercahnt list
+GET {{baseUrl}}/merchants/allmerchants
+Authorization: Bearer {{token}}
+
+### Mobile side api (if tid and mid exist will return all banks with their cards)
+POST {{baseUrl}}/merchants/check-merchant
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "MID": "267272424722001",
+  "TID": "27722001"
+}
+
+###delete merchants
+DELETE {{baseUrl}}/merchants/delete-merchant/3
+Authorization: Bearer {{token}}
