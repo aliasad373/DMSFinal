@@ -4,12 +4,16 @@ import {
   useState,
 } from "react";
 
+import { mapCardFromApi } from "../utils/cardMapper";
+
 import {
+  Co2Sharp,
   CreditCardOutlined,
   DeleteOutlineOutlined,
   EditOutlined,
   PercentOutlined,
   SearchOutlined,
+  SosRounded,
 } from "@mui/icons-material";
 
 import {
@@ -129,9 +133,18 @@ const CardsPage = () => {
       const response =
         await getAllCards();
 
-      setCards(
-        response.data || []
-      );
+        console.log(response)
+
+      const rawCards = Array.isArray(response.cards)
+  ? response.cards
+  : response?.cards || [];
+
+const mappedCards = rawCards
+  .map(mapCardFromApi)
+  .filter(Boolean);
+
+setCards(mappedCards);
+
     } catch (error) {
       setLoadError(
         error.message ||
@@ -283,6 +296,7 @@ const CardsPage = () => {
   const openEditCard = (
     card
   ) => {
+    console.log(card)
     setSelectedCard(card);
 
     setEditError("");
@@ -320,24 +334,27 @@ const CardsPage = () => {
 
         setEditError("");
 
-        const response =
-          await updateAllCard(
-            selectedCard.id,
-            formData
-          );
+        console.log(selectedCard)
 
-        setCards(
-          (
-            previousCards
-          ) =>
-            previousCards.map(
-              (card) =>
-                card.id ===
-                selectedCard.id
-                  ? response.data
-                  : card
-            )
-        );
+        const response = await updateAllCard(
+           selectedCard.id,
+           selectedCard.bankId,
+           formData
+         );
+       
+         console.log(
+           "UPDATE CARD RESPONSE:",
+           response
+         );
+       
+         setSuccessMessage(
+           response?.message ||
+             "Card updated successfully."
+         );
+       
+         // Reload cards from backend
+         await loadCards();
+
 
         setSuccessMessage(
           response.message
@@ -346,7 +363,7 @@ const CardsPage = () => {
         setEditDialogOpen(
           false
         );
-
+        //loadCards();
         setSelectedCard(null);
 
         return true;

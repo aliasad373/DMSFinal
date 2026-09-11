@@ -19,14 +19,11 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import { cardOverviewData } from "../../data/dashboardData";
+
 
 const chartColors = ["#f23a17", "#ff9273", "#98a2b3"];
 
-const totalCards = cardOverviewData.reduce(
-  (total, item) => total + item.value,
-  0
-);
+
 
 const statusItems = [
   {
@@ -55,7 +52,94 @@ const statusItems = [
   },
 ];
 
-const CardOverview = () => {
+const CardOverview = ({
+  cards = [],
+  loading = false,
+  error = "",
+}) => {
+  //data 
+  const creditCards =
+  cards.filter(
+    (card) =>
+      card?.cardType
+        ?.toUpperCase() ===
+      "CREDIT"
+  ).length;
+
+const debitCards =
+  cards.filter(
+    (card) =>
+      card?.cardType
+        ?.toUpperCase() ===
+      "DEBIT"
+  ).length;
+
+const otherCards =
+  cards.length -
+  creditCards -
+  debitCards;
+
+const totalCards =
+  cards.length;
+  //pie chart data
+  const cardOverviewData = [
+  {
+    name: "Credit Cards",
+    value: creditCards,
+  },
+  {
+    name: "Debit Cards",
+    value: debitCards,
+  },
+  {
+    name: "Other",
+    value: otherCards,
+  },
+];
+  // end of pie 
+  // percentage
+
+
+//
+//
+const statusItems = [
+  {
+    title: "Credit Cards",
+    value: creditCards,
+    icon: (
+      <CheckCircleOutlined />
+    ),
+    iconColor: "#039855",
+    valueColor: "#039855",
+    backgroundColor:
+      "#effaf3",
+  },
+  {
+    title: "Debit Cards",
+    value: debitCards,
+    icon: (
+      <ScheduleOutlined />
+    ),
+    iconColor: "#f23a17",
+    valueColor: "#f23a17",
+    backgroundColor:
+      "#fff3ee",
+  },
+  {
+    title: "Total Cards",
+    value: totalCards,
+    icon: (
+      <CancelOutlined />
+    ),
+    iconColor: "#667085",
+    valueColor: "#667085",
+    backgroundColor:
+      "#f2f4f7",
+  },
+];
+//
+
+  //end of data
   return (
     <Card
       elevation={0}
@@ -213,10 +297,13 @@ const CardOverview = () => {
                 }}
               >
                 {cardOverviewData.map((item, index) => {
-                  const percentage = (
-                    (item.value / totalCards) *
-                    100
-                  ).toFixed(1);
+                  const percentage =
+    totalCards > 0
+      ? (
+          (item.value / totalCards) *
+          100
+        ).toFixed(1)
+      : "0.0";
 
                   return (
                     <Box

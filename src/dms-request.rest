@@ -1,10 +1,10 @@
 
 ### Variables
-@baseUrl = http://localhost:3001/api
+@baseUrl = http://localhost:5000/api
 
 
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJkbXNhZG1pbiIsInVzZXJfdHlwZSI6ImFkbWluIiwicm9sZXMiOltbImFsbCJdXSwiaWF0IjoxNzg2MDMxMDQ5LCJleHAiOjE3ODYwNTk4NDl9.8DyS209teZW5JYLM74u4yG215XSrEPuuX7RsLeOk2cw
+@token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJkbXNhZG1pbiIsInVzZXJfdHlwZSI6ImFkbWluIiwicm9sZXMiOltbImFsbCJdXSwiaWF0IjoxNzg2OTUyODIzLCJleHAiOjE3ODY5ODE2MjN9.eIvDZrzFeYTl3HretXtEWz08G7tBgNU1GWHLFntH07c"
 
 
 
@@ -120,7 +120,8 @@ Content-Type: application/json
 GET {{baseUrl}}/merchants/allmerchants
 Authorization: Bearer {{token}}
 
-### Mobile side api (if tid and mid exist will return all banks with their cards)
+### Mobile side api 
+### If MID and TID exist, return merchant assigned banks with their cards
 POST {{baseUrl}}/merchants/check-merchant
 Authorization: Bearer {{token}}
 Content-Type: application/json

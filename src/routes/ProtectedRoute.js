@@ -1,20 +1,15 @@
 import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = () => {
-  /*
-   * For initial development we allow access when no API token exists.
-   * Change this to false after login API integration is complete.
-   */
-  const developmentMode = true;
+  // Get authentication token
+  const token = localStorage.getItem("dms_token");
 
-  const token =
-    localStorage.getItem("token") ||
-    sessionStorage.getItem("token");
-
-  if (!developmentMode && !token) {
+  // No token → redirect to login
+  if (!token) {
     return <Navigate to="/login" replace />;
   }
 
+  // Token exists → allow access to protected routes
   return <Outlet />;
 };
 

@@ -6,8 +6,8 @@ import unionpayIcon from "../assets/unionpay.png";
 export const cardSchemeIcons = {
   Visa: visaIcon,
   Mastercard: mastercardIcon,
-  PayPak: paypakIcon,
-  UnionPay: unionpayIcon,
+  Paypak: paypakIcon,
+  Unionpay: unionpayIcon,
 };
 
 export const getCardSchemeIcon = (scheme) => {

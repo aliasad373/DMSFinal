@@ -122,7 +122,9 @@ const BankCardsPage = () => {
       const response =
         await getCardsByBank(bankId);
 
-      setCards(response.data || []);
+        console.log("API bank card response: " + response.cards)
+
+      setCards(response.cards || []);
     } catch (error) {
       setLoadError(
         error.message ||
@@ -141,11 +143,11 @@ const BankCardsPage = () => {
    * STATS
    */
   const debitCards = cards.filter(
-    (card) => card.type === "Debit"
+    (card) => card.cardType === "DEBIT"
   ).length;
 
   const creditCards = cards.filter(
-    (card) => card.type === "Credit"
+    (card) => card.cardType === "CREDIT"
   ).length;
 
   const averageDiscount =
@@ -173,10 +175,10 @@ const BankCardsPage = () => {
 
     return cards.filter((card) => {
       const searchableValue = `
-        ${card.type || ""}
+        ${card.cardType || ""}
         ${card.scheme || ""}
-        ${card.category || ""}
-        ${card.bin || ""}
+        ${card.cardCategory || ""}
+        ${card.cardbin || ""}
       `.toLowerCase();
 
       const matchesSearch =
@@ -216,12 +218,42 @@ const BankCardsPage = () => {
     setCardDialogOpen(true);
   };
 
+  const formatCategory = (value) => {
+  if (!value) return "";
+
+  return (
+    value.charAt(0).toUpperCase() +
+    value.slice(1).toLowerCase()
+  );
+};
+
   /*
    * EDIT CARD
    */
   const openEditCard = (card) => {
+const mappedCard = {
+    id: card.cardId ?? card.card_id,
+
+    type: formatCategory(card.type ?? card.cardType),
+
+    bin: card.bin ?? card.cardbin,
+
+    category:
+      formatCategory(card.category ?? card.cardCategory),
+
+    discountPercentage:
+      card.discountPercentage,
+
+    capValue:
+      card.capValue ??
+      card.discountedAmount,
+
+    // Keep other fields if needed
+    scheme:
+      card.scheme ?? card.cardName ?? "",
+  };
     setDialogMode("edit");
-    setSelectedCard(card);
+    setSelectedCard(mappedCard);
     setDialogError("");
     setSuccessMessage("");
     setCardDialogOpen(true);
@@ -254,33 +286,35 @@ const BankCardsPage = () => {
             formData
           );
 
-        setCards((previous) => [
+       /* setCards((previous) => [
           response.data,
           ...previous,
-        ]);
+        ]);*/
+
+        await loadCards();
 
         setSuccessMessage(
           response.message
         );
       } else {
-        const response =
-          await updateCard(
-            selectedCard.id,
-            formData
-          );
+         const response = await updateCard(
+    selectedCard.id,
+    bankId,
+    formData
+  );
 
-        setCards((previous) =>
-          previous.map((card) =>
-            card.id ===
-            selectedCard.id
-              ? response.data
-              : card
-          )
-        );
+  console.log(
+    "UPDATE CARD RESPONSE:",
+    response
+  );
 
-        setSuccessMessage(
-          response.message
-        );
+  setSuccessMessage(
+    response?.message ||
+      "Card updated successfully."
+  );
+
+  // Reload cards from backend
+  await loadCards();
       }
 
       setCardDialogOpen(false);
@@ -321,18 +355,13 @@ const BankCardsPage = () => {
       setIsDeleting(true);
       setDeleteError("");
 
+      console.log(selectedCard)
+
       const response =
         await deleteCard(
-          selectedCard.id
+          selectedCard.cardId
         );
 
-      setCards((previous) =>
-        previous.filter(
-          (card) =>
-            card.id !==
-            selectedCard.id
-        )
-      );
 
       setSuccessMessage(
         response.message
@@ -340,6 +369,7 @@ const BankCardsPage = () => {
 
       setDeleteDialogOpen(false);
       setSelectedCard(null);
+      await loadCards();
     } catch (error) {
       setDeleteError(
         error.message ||
@@ -1124,7 +1154,7 @@ const BankCardsPage = () => {
                 (card, index) => {
                   const categoryStyle =
                     getCategoryStyle(
-                      card.category
+                      card.cardCategory
                     );
 
                   return (
@@ -1168,14 +1198,14 @@ const BankCardsPage = () => {
                                 1,
 
                               color:
-                                card.type ===
-                                "Debit"
+                                card.cardType ===
+                                "DEBIT"
                                   ? "#039855"
                                   : "#f23a17",
 
                               backgroundColor:
-                                card.type ===
-                                "Debit"
+                                card.cardType ===
+                                "DEBIT"
                                   ? "#ecfdf3"
                                   : "#fff0eb",
                             }}
@@ -1210,7 +1240,7 @@ const BankCardsPage = () => {
                                   12,
                               }}
                             >
-                              {card.type} Card
+                              {card.cardType} Card
                             </Typography>
                           </Box>
                         </Box>
@@ -1252,7 +1282,7 @@ const BankCardsPage = () => {
                               "nowrap",
                           }}
                         >
-                          {card.bin || "-"}
+                          {card.cardbin || "-"}
                         </Typography>
                       </Box>
 
@@ -1270,7 +1300,7 @@ const BankCardsPage = () => {
                               600,
                           }}
                         >
-                          {card.scheme ||
+                          {card.cardName ||
                             "-"}
                         </Typography>
                       </Box>
@@ -1281,7 +1311,7 @@ const BankCardsPage = () => {
                         <Chip
                           size="small"
                           label={
-                            card.category
+                            card.cardCategory
                           }
                           sx={{
                             color:
@@ -1315,7 +1345,7 @@ const BankCardsPage = () => {
 
                       <Box component="td">
                         {Number(
-                          card.capValue
+                          card.discountedAmount
                         ).toLocaleString()}
                       </Box>
 

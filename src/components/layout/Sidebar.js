@@ -4,6 +4,7 @@ import {
   DashboardOutlined,
   LogoutOutlined,
   StorefrontOutlined,
+  AssessmentOutlined,
 } from "@mui/icons-material";
 
 import {
@@ -45,6 +46,11 @@ const navigationItems = [
     path: "/merchants",
     icon: <StorefrontOutlined />,
   },
+  {
+    title: "Transaction Report",
+    path: "/transactions",
+    icon: <AssessmentOutlined />,
+  },
 ];
 
 const SidebarContent = ({ onNavigate }) => {
@@ -60,8 +66,9 @@ const SidebarContent = ({ onNavigate }) => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("dms_token");
     sessionStorage.removeItem("token");
+
     navigate("/login");
   };
 
@@ -69,18 +76,22 @@ const SidebarContent = ({ onNavigate }) => {
     <Box
       sx={{
         height: "100%",
+        minHeight: "100%",
         display: "flex",
         flexDirection: "column",
         color: "#ffffff",
         background:
           "linear-gradient(180deg, #f23a17 0%, #f34416 50%, #ed2f0b 100%)",
+        overflowY: "auto",
       }}
     >
+      {/* ================= LOGO ================= */}
       <Box
         sx={{
           px: 2.5,
           pt: 3,
           pb: 2,
+          flexShrink: 0,
         }}
       >
         <Box
@@ -111,10 +122,12 @@ const SidebarContent = ({ onNavigate }) => {
         </Typography>
       </Box>
 
+      {/* ================= NAVIGATION ================= */}
       <List
         sx={{
           px: 2,
           pt: 2,
+          flexShrink: 0,
         }}
       >
         {navigationItems.map((item) => {
@@ -132,9 +145,11 @@ const SidebarContent = ({ onNavigate }) => {
                 px: 2,
                 borderRadius: 2,
                 color: "#ffffff",
+
                 backgroundColor: isActive
                   ? "rgba(255,255,255,0.18)"
                   : "transparent",
+
                 "&:hover": {
                   backgroundColor: "rgba(255,255,255,0.14)",
                 },
@@ -161,9 +176,22 @@ const SidebarContent = ({ onNavigate }) => {
         })}
       </List>
 
-      <Box sx={{ flexGrow: 1 }} />
+      {/* Push bottom section down */}
+      <Box
+        sx={{
+          flexGrow: 1,
+          minHeight: 20,
+        }}
+      />
 
-      <Box sx={{ px: 2.5, pb: 2.5 }}>
+      {/* ================= USER + LOGOUT ================= */}
+      <Box
+        sx={{
+          px: 2.5,
+          pb: 2.5,
+          flexShrink: 0,
+        }}
+      >
         <Divider
           sx={{
             mb: 2,
@@ -171,6 +199,7 @@ const SidebarContent = ({ onNavigate }) => {
           }}
         />
 
+        {/* User Info */}
         <Box
           sx={{
             display: "flex",
@@ -185,6 +214,7 @@ const SidebarContent = ({ onNavigate }) => {
               height: 46,
               color: "#f23a17",
               backgroundColor: "#ffffff",
+              fontWeight: 700,
             }}
           >
             A
@@ -212,6 +242,7 @@ const SidebarContent = ({ onNavigate }) => {
           </Box>
         </Box>
 
+        {/* Logout */}
         <ListItemButton
           onClick={handleLogout}
           sx={{
@@ -219,6 +250,7 @@ const SidebarContent = ({ onNavigate }) => {
             px: 1.5,
             borderRadius: 2,
             color: "#ffffff",
+
             "&:hover": {
               backgroundColor: "rgba(255,255,255,0.14)",
             },
@@ -236,6 +268,7 @@ const SidebarContent = ({ onNavigate }) => {
           <ListItemText
             primary="Logout"
             primaryTypographyProps={{
+              fontSize: 15,
               fontWeight: 600,
             }}
           />
@@ -258,6 +291,7 @@ const Sidebar = ({ mobileOpen, onMobileClose }) => {
         },
       }}
     >
+      {/* ================= MOBILE DRAWER ================= */}
       <Drawer
         variant="temporary"
         open={mobileOpen}
@@ -270,15 +304,19 @@ const Sidebar = ({ mobileOpen, onMobileClose }) => {
             xs: "block",
             md: "none",
           },
+
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             border: 0,
+            boxSizing: "border-box",
+            overflowY: "auto",
           },
         }}
       >
         <SidebarContent onNavigate={onMobileClose} />
       </Drawer>
 
+      {/* ================= DESKTOP DRAWER ================= */}
       <Drawer
         variant="permanent"
         open
@@ -287,9 +325,12 @@ const Sidebar = ({ mobileOpen, onMobileClose }) => {
             xs: "none",
             md: "block",
           },
+
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             border: 0,
+            boxSizing: "border-box",
+            overflowY: "auto",
           },
         }}
       >

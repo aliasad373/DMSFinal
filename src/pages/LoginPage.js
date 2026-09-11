@@ -9,6 +9,7 @@ import { loginUser } from "../api/authApi"; // Adjust the import path as needed
 
 import digiKhataLogo from "../assets/digikhata-logo.PNG";
 import "./LoginPage.css";
+import { Construction } from "@mui/icons-material";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -92,35 +93,14 @@ const LoginPage = () => {
         formData.username.trim(),
         formData.password
       );
+      
+      console.log(response)
+      const token  = response.token
 
-      console.log("Login API Response:", response);
-
-      /*
-       * We don't yet know the exact response structure
-       * returned by your backend.
-       *
-       * These are common possibilities:
-       *
-       * response.token
-       * response.accessToken
-       * response.data.token
-       * response.data.accessToken
-       */
-
-      const token =
-        response?.token ||
-        response?.accessToken ||
-        response?.data?.token ||
-        response?.data?.accessToken;
-
-      if (token) {
+       if (token) {
         localStorage.setItem("dms_token", token);
       }
-
-      /*
-       * Store login information if backend returns
-       * user/admin information.
-       */
+    
 
       const user =
         response?.user ||
@@ -134,19 +114,13 @@ const LoginPage = () => {
         );
       }
 
-      /*
-       * Login successful
-       */
-
       navigate("/dashboard", {
         replace: true,
       });
 
     } catch (err) {
-      console.log(err)
-      console.error("Login Error:", "Error");
+      
 
-      let message = "Unable to login. Please try again.";
 
       if (err.response) {
         /*
@@ -156,26 +130,15 @@ const LoginPage = () => {
         console.log(
           "Login error response:",
           err.response.data
-        );
+        )
+        console.log(err.response.data.message)
 
-        message =
-          err.response.data?.message ||
-          err.response.data?.error ||
-          "Invalid username or password.";
+      //sError("Unable to Login")
+      setApiError(err.response.data.message)
 
-      } else if (err.request) {
-        /*
-         * Request was sent but no response received
-         */
+      } 
 
-        message =
-          "Unable to connect to the server. Please check your connection.";
-
-      } else {
-        message = err.message;
-      }
-
-      setError(message);
+      setIsLoading(false)
 
     } finally {
       setIsLoading(false);

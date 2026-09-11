@@ -1,5 +1,7 @@
 import { initialCards } from "../data/cardsMock";
 
+import apiClient from "./apiClient";
+
 let mockCards = [...initialCards];
 
 const delay = (milliseconds = 400) =>
@@ -11,17 +13,11 @@ const delay = (milliseconds = 400) =>
  * GET CARDS BY BANK
  */
 export const getCardsByBank = async (bankId) => {
-  await delay();
-
-  const numericBankId = Number(bankId);
-
-  return {
-    success: true,
-    message: "Cards fetched successfully.",
-    data: mockCards.filter(
-      (card) => card.bankId === numericBankId
-    ),
-  };
+  const response = await apiClient.get(
+    `/banks/bank-cards/${bankId}`
+  );
+  console.log(response)
+  return response.data;
 };
 
 /**
@@ -31,49 +27,32 @@ export const createCard = async (
   bankId,
   requestBody
 ) => {
-  await delay();
+  const response = await apiClient.post(
+    "/cards/register",
+    {
+      bankId: Number(bankId),
 
-  const newCard = {
-    id:
-      mockCards.length > 0
-        ? Math.max(
-            ...mockCards.map((card) => card.id)
-          ) + 1
-        : 1,
+      cardbin: requestBody.bin,
 
-    bankId: Number(bankId),
+      cardName: requestBody.scheme,
 
-    type: requestBody.type,
+      cardType: requestBody.type,
 
-    scheme: requestBody.scheme,
+      cardCategory:
+        requestBody.categoryType ||
+        requestBody.category,
 
-    bin: requestBody.bin,
+      discountPercentage: Number(
+        requestBody.discountPercentage
+      ),
 
-    category: requestBody.category,
+      discountedAmount: Number(
+        requestBody.capValue
+      ),
+    }
+  );
 
-    categoryType:
-      requestBody.categoryType ||
-      requestBody.category,
-
-    customCategory:
-      requestBody.customCategory || "",
-
-    discountPercentage: Number(
-      requestBody.discountPercentage
-    ),
-
-    capValue: Number(
-      requestBody.capValue
-    ),
-  };
-
-  mockCards.push(newCard);
-
-  return {
-    success: true,
-    message: "Card added successfully.",
-    data: newCard,
-  };
+  return response.data;
 };
 
 /**
@@ -81,78 +60,44 @@ export const createCard = async (
  */
 export const updateCard = async (
   cardId,
+  bankId,
   requestBody
 ) => {
-  await delay();
+  const response = await apiClient.put(
+    `/cards/update-card/${cardId}`,
+    {
+      bankId: Number(bankId),
 
-  const numericCardId = Number(cardId);
+      cardbin: requestBody.bin,
 
-  const cardIndex = mockCards.findIndex(
-    (card) => card.id === numericCardId
+      cardName: requestBody.scheme,
+
+      cardType:
+        requestBody.type?.toUpperCase(),
+
+      cardCategory:
+        requestBody.category?.toUpperCase(),
+
+      discountPercentage: Number(
+        requestBody.discountPercentage
+      ),
+
+      discountedAmount: Number(
+        requestBody.capValue
+      ),
+    }
   );
 
-  if (cardIndex === -1) {
-    throw new Error("Card not found.");
-  }
-
-  const existingCard = mockCards[cardIndex];
-
-  const updatedCard = {
-    ...existingCard,
-
-    type: requestBody.type,
-
-    scheme: requestBody.scheme,
-
-    category: requestBody.category,
-
-    categoryType:
-      requestBody.categoryType ||
-      requestBody.category,
-
-    customCategory:
-      requestBody.customCategory || "",
-
-    discountPercentage: Number(
-      requestBody.discountPercentage
-    ),
-
-    capValue: Number(
-      requestBody.capValue
-    ),
-  };
-
-  mockCards[cardIndex] = updatedCard;
-
-  return {
-    success: true,
-    message: "Card updated successfully.",
-    data: updatedCard,
-  };
+  return response.data;
 };
 
 /**
  * DELETE CARD
  */
 export const deleteCard = async (cardId) => {
-  await delay();
-
-  const numericCardId = Number(cardId);
-
-  const cardExists = mockCards.some(
-    (card) => card.id === numericCardId
+  const response = await apiClient.delete(
+    `/cards/delete-card/${cardId}`
   );
 
-  if (!cardExists) {
-    throw new Error("Card not found.");
-  }
-
-  mockCards = mockCards.filter(
-    (card) => card.id !== numericCardId
-  );
-
-  return {
-    success: true,
-    message: "Card deleted successfully.",
-  };
+  return response.data;
 };

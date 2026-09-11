@@ -1,4 +1,5 @@
 import { allCardsMock } from "../data/allCardsMock";
+import apiClient from "./apiClient";
 
 let cards = [...allCardsMock];
 
@@ -8,84 +9,57 @@ const delay = (milliseconds = 400) =>
   });
 
 export const getAllCards = async () => {
-  await delay();
-
-  return {
-    success: true,
-    message: "Cards fetched successfully.",
-    data: [...cards],
-  };
-};
-
-export const updateAllCard = async (
-  cardId,
-  requestBody
-) => {
-  await delay();
-
-  const numericCardId = Number(cardId);
-
-  const cardIndex = cards.findIndex(
-    (card) => card.id === numericCardId
+  const response = await apiClient.get(
+    "/cards/allcards"
   );
 
-  if (cardIndex === -1) {
-    throw new Error("Card not found.");
-  }
-
-  cards[cardIndex] = {
-    ...cards[cardIndex],
-
-    type: requestBody.type,
-    scheme: requestBody.scheme,
-    bin: requestBody.bin,
-
-    category: requestBody.category,
-
-    categoryType:
-      requestBody.categoryType ||
-      requestBody.category,
-
-    customCategory:
-      requestBody.customCategory || "",
-
-    discountPercentage: Number(
-      requestBody.discountPercentage
-    ),
-
-    capValue: Number(
-      requestBody.capValue
-    ),
-  };
-
-  return {
-    success: true,
-    message: "Card updated successfully.",
-    data: cards[cardIndex],
-  };
+  return response.data;
 };
+//
+export const updateAllCard = async (
+  cardId,
+  bankId,
+  requestBody
+) => {
+  const response = await apiClient.put(
+    `/cards/update-card/${cardId}`,
+    {
+      bankId: Number(bankId),
+
+      cardbin: requestBody.bin,
+
+      cardName: requestBody.scheme,
+
+      cardType:
+        requestBody.type?.toUpperCase(),
+
+      cardCategory:
+        requestBody.category?.toUpperCase(),
+
+      discountPercentage: Number(
+        requestBody.discountPercentage
+      ),
+
+      discountedAmount: Number(
+        requestBody.capValue
+      ),
+    }
+  );
+
+  return response.data;
+};
+//
+
+
+
+
 
 export const deleteAllCard = async (
   cardId
 ) => {
-  await delay();
-
-  const numericCardId = Number(cardId);
-
-  const exists = cards.some(
-    (card) => card.id === numericCardId
+   const response = await apiClient.delete(
+    `/cards/delete-card/${cardId}`
   );
 
-  if (!exists) {
-    throw new Error("Card not found.");
-  }
-
-  cards = cards.filter(
-    (card) => card.id !== numericCardId
-  );
-
-  return {
-    success: true,
-    message: "Card deleted successfully.",
-  };
+  return response.data;
 };

@@ -98,6 +98,8 @@ const CardDialog = ({
     setErrors({});
   }, [open, isEditMode, card]);
 
+  
+
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -532,11 +534,11 @@ const CardDialog = ({
                 Mastercard
               </MenuItem>
 
-              <MenuItem value="PayPak">
+              <MenuItem value="Paypak">
                 PayPak
               </MenuItem>
 
-              <MenuItem value="UnionPay">
+              <MenuItem value="Unionpay">
                 UnionPay
               </MenuItem>
             </TextField>
