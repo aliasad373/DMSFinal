@@ -77,27 +77,27 @@ const BanksPage = () => {
           ? response.banks
           : [];
 
-      const mappedBanks = rawBanks.map((bank) => ({
-        id: bank.bank_id,
-        name: bank.bank_name,
-
-        iconUrl: bank.logo
-          ? bank.logo.startsWith("http")
-            ? bank.logo
-            : `http://localhost:5000${bank.logo}`
-          : null,
-
-        createdAt: bank.created_at,
-        updatedAt: bank.updated_at,
-      }));
-
       // const mappedBanks = rawBanks.map((bank) => ({
       //   id: bank.bank_id,
       //   name: bank.bank_name,
-      //   iconUrl: bank.logo,
+
+      //   iconUrl: bank.logo
+      //     ? bank.logo.startsWith("http")
+      //       ? bank.logo
+      //       : `http://localhost:5000${bank.logo}`
+      //     : null,
+
       //   createdAt: bank.created_at,
       //   updatedAt: bank.updated_at,
       // }));
+
+      const mappedBanks = rawBanks.map((bank) => ({
+        id: bank.bank_id,
+        name: bank.bank_name,
+        iconUrl: bank.logo,
+        createdAt: bank.created_at,
+        updatedAt: bank.updated_at,
+      }));
 
       console.log("MAPPED BANKS:", mappedBanks);
 
