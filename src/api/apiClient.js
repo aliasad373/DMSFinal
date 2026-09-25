@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "https://uatdms.digikhata.pk/api/",
+  baseURL: "https://dms.digikhata.pk/api/",
   headers: {
     "Content-Type": "application/json",
   },

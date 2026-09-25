@@ -1,6 +1,8 @@
 
 ### Variables
-@baseUrl = https://uatdms.digikhata.pk/api/
+# @baseUrl = https://119.13.189.233:80/api
+# @baseUrl = https://uatdms.digikhata.pk/api/
+@baseUrl = https://dms.digikhata.pk/api/
 
 
 
